@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+//script to get the velocity of the spaceship in the x-, y- and z axes, and display the float values in UI text elements
 public class UIDisplayVelocity : MonoBehaviour {
     public UnityEngine.UI.Text displayVelocityX;
     public UnityEngine.UI.Text displayVelocityY;
@@ -9,7 +10,7 @@ public class UIDisplayVelocity : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        rb = GameObject.Find("Cube").GetComponent<Rigidbody>();
+        rb = GameObject.Find("Cube").GetComponent<Rigidbody>(); //replace cube with spaceship
 	}
 	
 	// Update is called once per frame

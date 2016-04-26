@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+//script to get the rotation of the spaceship in the x-, y- and z axes, and display the float values in UI text elements
 public class UIDisplayRotation : MonoBehaviour {
     public UnityEngine.UI.Text displayRotationX;
     public UnityEngine.UI.Text displayRotationY;
@@ -9,7 +10,7 @@ public class UIDisplayRotation : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        tf = GameObject.Find("Cube").GetComponent<Transform>();
+        tf = GameObject.Find("Cube").GetComponent<Transform>(); //replace cube with spaceship
 	}
 	
 	// Update is called once per frame

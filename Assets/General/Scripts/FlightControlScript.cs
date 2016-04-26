@@ -1,12 +1,48 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System;
+using System.Threading;
+using System.IO.Ports;
+
+struct ArduinoData
+{
+    public float arduinoPitch;
+    public float arduinoRoll;
+    public float arduinoYaw;
+    public float arduinoAnalogX;
+    public float arduinoAnalogY;
+    public bool arduinoButtonZ;
+    public bool arduinoButtonC;
+
+    public ArduinoData(float arduinoPitch, float arduinoRoll, float arduinoYaw, float arduinoAnalogX, float arduinoAnalogY, bool arduinoButtonZ, bool arduinoButtonC)
+    {
+        this.arduinoPitch = arduinoPitch;
+        this.arduinoRoll = arduinoRoll;
+        this.arduinoYaw = arduinoYaw;
+        this.arduinoAnalogX = arduinoAnalogX;
+        this.arduinoAnalogY = arduinoAnalogY;
+        this.arduinoButtonZ = arduinoButtonZ;
+        this.arduinoButtonC = arduinoButtonC;
+    }
+}
 
 public class FlightControllScript : MonoBehaviour {
 
+    #region Arduinoreader
+    private Thread ioThread;
+    private SerialPort arduino;
+    private bool keepReading;
+    private ArduinoData arduinoData;
+    #endregion
     private Rigidbody rigidBody;
     // Use this for initialization
     void Start () {
+        ioThread = new Thread(Poll);
+        arduino = new SerialPort("COM6", 9600);
+        arduino.DtrEnable = true;
+        keepReading = true;
+        arduinoData = new ArduinoData();
         rigidBody = gameObject.GetComponent<Rigidbody>();
+        ioThread.Start();
     }
 	
 	// Update is called once per frame
@@ -42,4 +78,32 @@ public class FlightControllScript : MonoBehaviour {
         rigidBody.AddRelativeForce(Vector3.forward * Time.deltaTime * forward, ForceMode.Acceleration);
         rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * vertical, ForceMode.Acceleration);
     }
+
+    #region ArduinoPoll
+
+    void OnApplicationQuit()
+    {
+        keepReading = false;
+    }
+
+    private void Poll()
+    {
+        Debug.Log("Starting Poll Thread");
+        arduino.Open();
+        while (keepReading)
+        {
+            if (arduino.IsOpen)
+            {
+                string input = arduino.ReadLine();
+                string[] segments = input.Split(' ');
+                arduinoData.arduinoButtonZ = Convert.ToBoolean(Convert.ToInt32(segments[1]));
+                arduinoData.arduinoButtonC = Convert.ToBoolean(Convert.ToInt32(segments[3]));
+                arduinoData.arduinoPitch = Convert.ToSingle(segments[5]);
+                arduinoData.arduinoRoll = Convert.ToSingle(segments[7]);
+            }
+        }
+        arduino.Close();
+        Debug.Log("Ending Poll Thread");
+    }
+    #endregion
 }

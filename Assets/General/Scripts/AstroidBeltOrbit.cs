@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class AstroidBeltOrbit : MonoBehaviour {
-    public GameObject[] asteroidBelts = new GameObject[3];
+    public GameObject[] asteroidBelts = new GameObject[9];
 	// Use this for initialization
 	void Start () {
 	
@@ -14,5 +14,11 @@ public class AstroidBeltOrbit : MonoBehaviour {
         asteroidBelts[0].transform.eulerAngles += new Vector3(0, 1.50f, 0) * Time.deltaTime;
         asteroidBelts[1].transform.eulerAngles += new Vector3(0, 1, 0) * Time.deltaTime;
         asteroidBelts[2].transform.eulerAngles += new Vector3(0, 0.50f, 0) * Time.deltaTime;
+        asteroidBelts[3].transform.eulerAngles += new Vector3(0, 1.50f, 0) * Time.deltaTime;
+        asteroidBelts[4].transform.eulerAngles += new Vector3(0, 1, 0) * Time.deltaTime;
+        asteroidBelts[5].transform.eulerAngles += new Vector3(0, 0.50f, 0) * Time.deltaTime;
+        asteroidBelts[6].transform.eulerAngles += new Vector3(0, 1.50f, 0) * Time.deltaTime;
+        asteroidBelts[7].transform.eulerAngles += new Vector3(0, 1, 0) * Time.deltaTime;
+        asteroidBelts[8].transform.eulerAngles += new Vector3(0, 0.50f, 0) * Time.deltaTime;
     }
 }

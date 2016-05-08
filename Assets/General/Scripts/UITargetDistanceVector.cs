@@ -11,6 +11,6 @@ public class UITargetDistanceVector : MonoBehaviour {
 	// Update is called once per frame
     //Distance to the target object is calculated every frame 
 	void Update () {
-        distanceText.text = (Vector3.Distance(target.transform.position, spaceship.transform.position) / 1000).ToString() + " kilometers"; //make kilometers instead
+        distanceText.text = (Vector3.Distance(target.transform.position, spaceship.transform.position) / 1000).ToString("F2") + " km"; //displaying distance in kilometers
 	}
 }

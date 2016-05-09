@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Controls : MonoBehaviour {
+public class Sounds : MonoBehaviour {
 
     public AudioClip sound;
     public AudioClip powerEngine;

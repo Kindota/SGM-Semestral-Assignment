@@ -44,7 +44,7 @@ public class Sounds : MonoBehaviour {
             if (deaccelleration.isPlaying)
                 deaccelleration.Stop();
 
-            transform.position += Vector3.up * 0.7f * Time.deltaTime;
+            transform.position += Vector3.up * 1.5f * Time.deltaTime;
 
             if (!accelleration.isPlaying)
             {

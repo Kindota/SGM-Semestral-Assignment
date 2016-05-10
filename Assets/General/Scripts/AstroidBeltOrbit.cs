@@ -11,14 +11,14 @@ public class AstroidBeltOrbit : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        asteroidBelts[0].transform.eulerAngles += new Vector3(0, 1.50f, 0) * Time.deltaTime;
-        asteroidBelts[1].transform.eulerAngles += new Vector3(0, 1, 0) * Time.deltaTime;
-        asteroidBelts[2].transform.eulerAngles += new Vector3(0, 0.50f, 0) * Time.deltaTime;
-        asteroidBelts[3].transform.eulerAngles += new Vector3(0, 1.50f, 0) * Time.deltaTime;
-        asteroidBelts[4].transform.eulerAngles += new Vector3(0, 1, 0) * Time.deltaTime;
-        asteroidBelts[5].transform.eulerAngles += new Vector3(0, 0.50f, 0) * Time.deltaTime;
-        asteroidBelts[6].transform.eulerAngles += new Vector3(0, 1.50f, 0) * Time.deltaTime;
-        asteroidBelts[7].transform.eulerAngles += new Vector3(0, 1, 0) * Time.deltaTime;
-        asteroidBelts[8].transform.eulerAngles += new Vector3(0, 0.50f, 0) * Time.deltaTime;
+        asteroidBelts[0].transform.Rotate(0, 1.5f * Time.deltaTime, 0);
+        asteroidBelts[1].transform.Rotate(0, 1.0f * Time.deltaTime, 0);
+        asteroidBelts[2].transform.Rotate(0, 0.5f * Time.deltaTime, 0);
+        asteroidBelts[3].transform.Rotate(0, -1.5f * Time.deltaTime, 0);
+        asteroidBelts[4].transform.Rotate(0, -1.0f * Time.deltaTime, 0);
+        asteroidBelts[5].transform.Rotate(0, -0.5f * Time.deltaTime, 0);
+        asteroidBelts[6].transform.Rotate(0, 1.5f * Time.deltaTime, 0);
+        asteroidBelts[7].transform.Rotate(0, 1.0f * Time.deltaTime, 0);
+        asteroidBelts[8].transform.Rotate(0, 0.5f * Time.deltaTime, 0);
     }
 }

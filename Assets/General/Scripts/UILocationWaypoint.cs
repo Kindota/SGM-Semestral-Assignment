@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
-public class UILocationWaypoint : MonoBehaviour {
+public class UILocationWaypoint : MonoBehaviour
+{
     public Camera cam;                          //drag the main camera to the script in the inspector
     public GameObject spaceship;                //drag the spaceship gameobject to the script in the inspector
     private Renderer rend1, rend2, rend3;       //button renderers used to change the color
@@ -17,19 +18,19 @@ public class UILocationWaypoint : MonoBehaviour {
         rend3 = GameObject.Find("Location3").GetComponent<Renderer>();
     }
 
-    void Update()
+    void Update() 
     {
-        RaycastHit hit;                                                          //to store data from collisions
-        Ray ray = new Ray(cam.transform.position, cam.transform.forward);        //define ray
-        Physics.Raycast(ray, out hit, 50.0f);                                    //shoot ray
-        
+        RaycastHit hit;                                                             //to store data from collisions
+        Ray ray = new Ray(cam.transform.position, cam.transform.forward);           //define ray
+        Physics.Raycast(ray, out hit, 50.0f);                                       //shoot ray
+
         if (hit.collider.tag == "Location1")
         {
             rend1.material.color = Color.cyan;                                  //
             rend2.material.color = Color.white;                                 //render button colors
             rend3.material.color = Color.white;                                 //
             target = GameObject.Find("Platform1").GetComponent<Transform>();    //get transform from platform1
-            distanceText.text = (Vector3.Distance(target.position, 
+            distanceText.text = (Vector3.Distance(target.position,
                                     spaceship.transform.position) / 1000).ToString("F2") + " km"; //distance vector to display distance in kilometers
         }
         else if (hit.collider.tag == "Location2")

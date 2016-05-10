@@ -40,7 +40,7 @@ public class FlightControllScript : MonoBehaviour {
         keepReading = true;
         arduinoData = new ArduinoData();
         rigidBody = gameObject.GetComponent<Rigidbody>();
-        //ioThread.Start();
+        ioThread.Start();
     }
 	
 	// Update is called once per frame
@@ -57,7 +57,7 @@ public class FlightControllScript : MonoBehaviour {
         float pitch = Input.GetAxis("Pitch");
         float roll = Input.GetAxis("Roll");
         float yaw = Input.GetAxis("Yaw");
-        Debug.Log("Pitch " + pitch + " roll " + roll + " yaw " + yaw);
+        //Debug.Log("Pitch " + pitch + " roll " + roll + " yaw " + yaw);
         rigidBody.AddRelativeTorque(Vector3.forward * Time.deltaTime * roll * 250, ForceMode.Acceleration);
         rigidBody.AddRelativeTorque(Vector3.right * Time.deltaTime * pitch * 250, ForceMode.Acceleration);
         rigidBody.AddRelativeTorque(Vector3.up * Time.deltaTime * yaw * 250, ForceMode.Acceleration);
@@ -75,12 +75,12 @@ public class FlightControllScript : MonoBehaviour {
         /*rigidBody.AddRelativeForce(Vector3.left * Time.deltaTime * strafe, ForceMode.Acceleration);
         rigidBody.AddRelativeForce(Vector3.forward * Time.deltaTime * forward, ForceMode.Acceleration);
         rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * vertical, ForceMode.Acceleration);*/
-
-        rigidBody.AddRelativeForce(Vector3.forward * Time.deltaTime * arduinoData.arduinoAnalogY * 25, ForceMode.Acceleration);
+        Debug.Log("y " + arduinoData.arduinoAnalogY + " x " + arduinoData.arduinoAnalogX + " pitch " + arduinoData.arduinoPitch);
+        rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * arduinoData.arduinoAnalogY * 150, ForceMode.Acceleration);
+        rigidBody.AddRelativeForce(Vector3.left * Time.deltaTime * arduinoData.arduinoAnalogX * -150, ForceMode.Acceleration);
         if (arduinoData.arduinoButtonZ)
         {
-           rigidBody.AddRelativeForce(Vector3.left * Time.deltaTime * arduinoData.arduinoRoll * 25, ForceMode.Acceleration);
-            rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * arduinoData.arduinoPitch * 25, ForceMode.Acceleration);
+            rigidBody.AddRelativeForce(Vector3.forward * Time.deltaTime * arduinoData.arduinoPitch * 150, ForceMode.Acceleration);
         }
     }
 
@@ -101,14 +101,16 @@ public class FlightControllScript : MonoBehaviour {
             if (arduino.IsOpen)
             {
                 string input = arduino.ReadLine();
-                Debug.Log(input);
+                //Debug.Log(input);
                 string[] segments = input.Split(' ');
                 arduinoData.arduinoButtonZ = Convert.ToBoolean(Convert.ToInt32(segments[1]));
                 arduinoData.arduinoButtonC = Convert.ToBoolean(Convert.ToInt32(segments[3]));
-                arduinoData.arduinoPitch = Convert.ToSingle(segments[5]);
-                arduinoData.arduinoRoll = Convert.ToSingle(segments[7]);
+                arduinoData.arduinoPitch = Convert.ToSingle(segments[7]);
+                arduinoData.arduinoRoll = Convert.ToSingle(segments[5]);
                 arduinoData.arduinoAnalogX = Convert.ToSingle(segments[9]) - 125f;
                 arduinoData.arduinoAnalogY = Convert.ToSingle(segments[11]) - 130f;
+                if (arduinoData.arduinoAnalogX < 5 && arduinoData.arduinoAnalogX > -5) arduinoData.arduinoAnalogX = 0;
+                if (arduinoData.arduinoAnalogY < 5 && arduinoData.arduinoAnalogY > -5) arduinoData.arduinoAnalogY = 0;
             }
         }
         arduino.Close();

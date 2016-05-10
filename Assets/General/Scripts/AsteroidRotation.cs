@@ -17,6 +17,6 @@ public class AsteroidRotation : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        transform.eulerAngles += new Vector3(RorationAngleX, RorationAngleY, 0) * Time.deltaTime;
+        transform.eulerAngles += new Vector3(RorationAngleX, RorationAngleY, RorationAngleZ) * Time.deltaTime;
     }
 }

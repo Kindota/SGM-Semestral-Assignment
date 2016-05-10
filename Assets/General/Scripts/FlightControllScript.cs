@@ -32,8 +32,12 @@ public class FlightControllScript : MonoBehaviour {
     private ArduinoData arduinoData;
     #endregion
     private Rigidbody rigidBody;
+    private bool buttonZLastValue;
+    private float zeroInValue;
     // Use this for initialization
     void Start () {
+        buttonZLastValue = false;
+        zeroInValue = 0;
         ioThread = new Thread(Poll);
         arduino = new SerialPort("COM4", 9600);
         arduino.DtrEnable = true;
@@ -75,12 +79,21 @@ public class FlightControllScript : MonoBehaviour {
         /*rigidBody.AddRelativeForce(Vector3.left * Time.deltaTime * strafe, ForceMode.Acceleration);
         rigidBody.AddRelativeForce(Vector3.forward * Time.deltaTime * forward, ForceMode.Acceleration);
         rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * vertical, ForceMode.Acceleration);*/
-        Debug.Log("y " + arduinoData.arduinoAnalogY + " x " + arduinoData.arduinoAnalogX + " pitch " + arduinoData.arduinoPitch);
         rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * arduinoData.arduinoAnalogY * 150, ForceMode.Acceleration);
         rigidBody.AddRelativeForce(Vector3.left * Time.deltaTime * arduinoData.arduinoAnalogX * -150, ForceMode.Acceleration);
         if (arduinoData.arduinoButtonZ)
         {
-            rigidBody.AddRelativeForce(Vector3.forward * Time.deltaTime * arduinoData.arduinoPitch * 150, ForceMode.Acceleration);
+            if (!buttonZLastValue)
+            {
+                zeroInValue = arduinoData.arduinoPitch;
+                buttonZLastValue = true;
+            }
+            rigidBody.AddRelativeForce(Vector3.forward * Time.deltaTime * (arduinoData.arduinoPitch - zeroInValue) * 150, ForceMode.Acceleration);
+            Debug.Log(arduinoData.arduinoPitch - zeroInValue);
+        }
+        else
+        {
+            buttonZLastValue = false;
         }
     }
 

@@ -7,17 +7,15 @@ struct ArduinoData
 {
     public float arduinoPitch;
     public float arduinoRoll;
-    public float arduinoYaw;
     public float arduinoAnalogX;
     public float arduinoAnalogY;
     public bool arduinoButtonZ;
     public bool arduinoButtonC;
 
-    public ArduinoData(float arduinoPitch, float arduinoRoll, float arduinoYaw, float arduinoAnalogX, float arduinoAnalogY, bool arduinoButtonZ, bool arduinoButtonC)
+    public ArduinoData(float arduinoPitch, float arduinoRoll, float arduinoAnalogX, float arduinoAnalogY, bool arduinoButtonZ, bool arduinoButtonC)
     {
         this.arduinoPitch = arduinoPitch;
         this.arduinoRoll = arduinoRoll;
-        this.arduinoYaw = arduinoYaw;
         this.arduinoAnalogX = arduinoAnalogX;
         this.arduinoAnalogY = arduinoAnalogY;
         this.arduinoButtonZ = arduinoButtonZ;
@@ -37,7 +35,7 @@ public class FlightControllScript : MonoBehaviour {
     // Use this for initialization
     void Start () {
         ioThread = new Thread(Poll);
-        arduino = new SerialPort("COM6", 9600);
+        arduino = new SerialPort("COM4", 9600);
         arduino.DtrEnable = true;
         keepReading = true;
         arduinoData = new ArduinoData();
@@ -60,9 +58,9 @@ public class FlightControllScript : MonoBehaviour {
         float roll = Input.GetAxis("Roll");
         float yaw = Input.GetAxis("Yaw");
 
-        rigidBody.AddRelativeTorque(Vector3.left * Time.deltaTime * roll, ForceMode.Acceleration);
-        rigidBody.AddRelativeTorque(Vector3.forward * Time.deltaTime * pitch, ForceMode.Acceleration);
-        rigidBody.AddRelativeTorque(Vector3.up * Time.deltaTime * yaw, ForceMode.Acceleration);
+        rigidBody.AddRelativeTorque(Vector3.forward * Time.deltaTime * roll * 25, ForceMode.Acceleration);
+        rigidBody.AddRelativeTorque(Vector3.right * Time.deltaTime * pitch * 25, ForceMode.Acceleration);
+        rigidBody.AddRelativeTorque(Vector3.up * Time.deltaTime * yaw * 25, ForceMode.Acceleration);
     }
 
     /// <summary>
@@ -70,13 +68,20 @@ public class FlightControllScript : MonoBehaviour {
     /// </summary>
     private void LinearMovement()
     {
-        float forward = Input.GetAxis("Forward");
+        /*float forward = Input.GetAxis("Forward");
         float strafe = Input.GetAxis("Strafe");
-        float vertical = Input.GetAxis("Vertical");
+        float vertical = Input.GetAxis("Vertical");*/
 
-        rigidBody.AddRelativeForce(Vector3.left * Time.deltaTime * strafe, ForceMode.Acceleration);
+        /*rigidBody.AddRelativeForce(Vector3.left * Time.deltaTime * strafe, ForceMode.Acceleration);
         rigidBody.AddRelativeForce(Vector3.forward * Time.deltaTime * forward, ForceMode.Acceleration);
-        rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * vertical, ForceMode.Acceleration);
+        rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * vertical, ForceMode.Acceleration);*/
+
+        rigidBody.AddRelativeForce(Vector3.forward * Time.deltaTime * arduinoData.arduinoAnalogY * 25, ForceMode.Acceleration);
+        if (arduinoData.arduinoButtonZ)
+        {
+           rigidBody.AddRelativeForce(Vector3.left * Time.deltaTime * arduinoData.arduinoRoll * 25, ForceMode.Acceleration);
+            rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * arduinoData.arduinoPitch * 25, ForceMode.Acceleration);
+        }
     }
 
     #region ArduinoPoll
@@ -90,16 +95,20 @@ public class FlightControllScript : MonoBehaviour {
     {
         Debug.Log("Starting Poll Thread");
         arduino.Open();
+        arduino.ReadLine();
         while (keepReading)
         {
             if (arduino.IsOpen)
             {
                 string input = arduino.ReadLine();
+                Debug.Log(input);
                 string[] segments = input.Split(' ');
                 arduinoData.arduinoButtonZ = Convert.ToBoolean(Convert.ToInt32(segments[1]));
                 arduinoData.arduinoButtonC = Convert.ToBoolean(Convert.ToInt32(segments[3]));
                 arduinoData.arduinoPitch = Convert.ToSingle(segments[5]);
                 arduinoData.arduinoRoll = Convert.ToSingle(segments[7]);
+                arduinoData.arduinoAnalogX = Convert.ToSingle(segments[9]) - 125f;
+                arduinoData.arduinoAnalogY = Convert.ToSingle(segments[11]) - 130f;
             }
         }
         arduino.Close();

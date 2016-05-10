@@ -3,31 +3,35 @@ using System.Collections;
 
 public class Sounds : MonoBehaviour {
 
-    public AudioClip sound;
+    public AudioClip speedUp;
     public AudioClip powerEngine;
     public AudioClip slowDown;
+    public AudioClip ambient;
     private AudioSource accelleration;
     private AudioSource deaccelleration;
-    private AudioSource idle;
-    private AudioSource stagnation;
+    private AudioSource engineSource;
+    private AudioSource ambientSource;
 
 
     void Awake()
     {
 
-        idle = gameObject.AddComponent<AudioSource>();
-        idle.loop = true;
-        idle.playOnAwake = true;
-        idle.clip = sound;
-
+        ambientSource = gameObject.AddComponent<AudioSource>();
         accelleration = gameObject.AddComponent<AudioSource>();
         deaccelleration = gameObject.AddComponent<AudioSource>();
+        engineSource = gameObject.AddComponent<AudioSource>();
 
+        ambientSource.loop = true;
+        ambientSource.playOnAwake = true;
+        ambientSource.clip = ambient;
+        engineSource.clip = powerEngine;
+        deaccelleration.clip = slowDown;
+        accelleration.clip = speedUp;
     }
 
 	// Use this for initialization
 	void Start () {
-        idle.Play();
+        ambientSource.Play();
     }
 
 	
@@ -36,8 +40,8 @@ public class Sounds : MonoBehaviour {
 
         if (!(accelleration.isPlaying || deaccelleration.isPlaying))
         {
-            idle.PlayOneShot(sound, 0.03f);
-            idle.loop = true;
+            ambientSource.PlayOneShot(ambient, 0.03f);
+            ambientSource.loop = true;
         }
         if (Input.GetKey(KeyCode.UpArrow))
         {

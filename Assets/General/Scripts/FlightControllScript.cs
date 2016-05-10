@@ -40,7 +40,7 @@ public class FlightControllScript : MonoBehaviour {
         keepReading = true;
         arduinoData = new ArduinoData();
         rigidBody = gameObject.GetComponent<Rigidbody>();
-        ioThread.Start();
+        //ioThread.Start();
     }
 	
 	// Update is called once per frame
@@ -57,10 +57,10 @@ public class FlightControllScript : MonoBehaviour {
         float pitch = Input.GetAxis("Pitch");
         float roll = Input.GetAxis("Roll");
         float yaw = Input.GetAxis("Yaw");
-
-        rigidBody.AddRelativeTorque(Vector3.forward * Time.deltaTime * roll * 25, ForceMode.Acceleration);
-        rigidBody.AddRelativeTorque(Vector3.right * Time.deltaTime * pitch * 25, ForceMode.Acceleration);
-        rigidBody.AddRelativeTorque(Vector3.up * Time.deltaTime * yaw * 25, ForceMode.Acceleration);
+        Debug.Log("Pitch " + pitch + " roll " + roll + " yaw " + yaw);
+        rigidBody.AddRelativeTorque(Vector3.forward * Time.deltaTime * roll * 250, ForceMode.Acceleration);
+        rigidBody.AddRelativeTorque(Vector3.right * Time.deltaTime * pitch * 250, ForceMode.Acceleration);
+        rigidBody.AddRelativeTorque(Vector3.up * Time.deltaTime * yaw * 250, ForceMode.Acceleration);
     }
 
     /// <summary>

@@ -15,8 +15,8 @@ public class UIDisplayVelocity : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        displayVelocityX.text = rb.velocity.x.ToString();
-        displayVelocityX.text = rb.velocity.y.ToString();
-        displayVelocityX.text = rb.velocity.z.ToString();
+        displayVelocityX.text = Mathf.Round(rb.velocity.x).ToString();
+        displayVelocityX.text = Mathf.Round(rb.velocity.y).ToString();
+        displayVelocityX.text = Mathf.Round(rb.velocity.z).ToString();
     }
 }

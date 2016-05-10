@@ -3,20 +3,21 @@ using System.Collections;
 
 public class AsteroidRotation : MonoBehaviour
 {
-    int RorationAngleX;
-    int RorationAngleY;
-    int RorationAngleZ;
+    public float rotationMultiplyer = 1;
+    float RotationAngleX;
+    float RotationAngleY;
+    float RotationAngleZ;
     // Use this for initialization
     void Start ()
     {
-        RorationAngleX = Random.Range(4, 10);
-        RorationAngleY = Random.Range(4, 10);
-        RorationAngleZ = Random.Range(4, 10);
+        RotationAngleX = Random.Range(2, 4) * rotationMultiplyer;
+        RotationAngleY = Random.Range(2, 4) * rotationMultiplyer;
+        RotationAngleZ = Random.Range(2, 4) * rotationMultiplyer;
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        transform.eulerAngles += new Vector3(RorationAngleX, RorationAngleY, 0) * Time.deltaTime;
+        transform.Rotate(RotationAngleX * Time.deltaTime, RotationAngleY * Time.deltaTime, RotationAngleZ * Time.deltaTime);
     }
 }

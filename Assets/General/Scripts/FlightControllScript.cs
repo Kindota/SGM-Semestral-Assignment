@@ -95,8 +95,8 @@ public class FlightControllScript : MonoBehaviour {
         /*rigidBody.AddRelativeForce(Vector3.left * Time.deltaTime * strafe, ForceMode.Acceleration);
         rigidBody.AddRelativeForce(Vector3.forward * Time.deltaTime * forward, ForceMode.Acceleration);
         rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * vertical, ForceMode.Acceleration);*/
-        rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * arduinoData.arduinoAnalogY * 100, ForceMode.Acceleration);
-        rigidBody.AddRelativeForce(Vector3.left * Time.deltaTime * arduinoData.arduinoAnalogX * -100, ForceMode.Acceleration);
+        rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * arduinoData.arduinoAnalogY * 50, ForceMode.Acceleration);
+        rigidBody.AddRelativeForce(Vector3.left * Time.deltaTime * arduinoData.arduinoAnalogX * -50, ForceMode.Acceleration);
         if (arduinoData.arduinoButtonZ)
         {
             if (!buttonZLastValue)
@@ -105,7 +105,7 @@ public class FlightControllScript : MonoBehaviour {
                 buttonZLastValue = true;
             }
             float throttleValue = (arduinoData.arduinoPitch - zeroInValue);
-            rigidBody.AddRelativeForce(Vector3.forward * Time.deltaTime * throttleValue * 50, ForceMode.Acceleration);
+            rigidBody.AddRelativeForce(Vector3.forward * Time.deltaTime * throttleValue * 25, ForceMode.Acceleration);
             Debug.Log(arduinoData.arduinoPitch - zeroInValue);
         }
         else

@@ -20,7 +20,7 @@ public class Sounds : MonoBehaviour {
         ambientSource.clip = ambient;
         engineSource.clip = powerEngine;
 
-        ambientSource.Play();
+        ambientSource.PlayOneShot(ambient, 1);
         ambientSource.loop = true;
         ambientSource.playOnAwake = true;
          

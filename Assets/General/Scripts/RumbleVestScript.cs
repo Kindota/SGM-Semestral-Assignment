@@ -15,7 +15,8 @@ public class RumbleVestScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        int strenght = (int)((rigidBody.velocity.normalized.magnitude/2f) * 255);
+        //int strenght = (int)((rigidBody.velocity.normalized.magnitude/2f) * 255);
+        int strenght = (int)((rigidBody.velocity.magnitude*2f) * 127.5f);
         SetVest(strenght);
         Debug.Log(strenght);
 	}
@@ -23,6 +24,11 @@ public class RumbleVestScript : MonoBehaviour {
     private void SetVest(int both)
     {
         SetVest(both, both);
+    }
+
+    void OnApplicationQuit()
+    {
+        SetVest(0);
     }
 
     private void SetVest(int left, int right)

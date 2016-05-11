@@ -9,7 +9,6 @@ public class UILocationWaypoint : MonoBehaviour
     private Transform target;                   //transform of target space stations       
     public UnityEngine.UI.Text distanceText;    //UI text for distance to target space station
 
-
     void Start ()
     {
         arrow = GameObject.Find("Arrow");
@@ -56,5 +55,17 @@ public class UILocationWaypoint : MonoBehaviour
             arrow.transform.LookAt(target.position);    //points the arrow prefab in the direction of the target space station
         }
         catch (System.NullReferenceException) { }
+    }
+
+    public float distanceToTarget()
+    {   
+        if(target != null)
+        {
+            return Vector3.Distance(target.position, spaceship.transform.position) / 1000;
+        }
+        else
+        {
+            return 999;
+        }
     }
 }

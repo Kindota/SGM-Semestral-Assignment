@@ -27,7 +27,7 @@ public class Sounds : MonoBehaviour {
         ambientSource.clip = ambient;
         engineSource.clip = powerEngine;
 
-        ambientSource.PlayOneShot(ambient, 1);
+        ambientSource.PlayOneShot(ambient, 1f);
         ambientSource.loop = true;
         ambientSource.playOnAwake = true;
         tf = GameObject.Find("cockpit").GetComponent<Transform>();
@@ -42,9 +42,9 @@ public class Sounds : MonoBehaviour {
         float velocityZ = Mathf.Round(rb.velocity.z);
         velocity = Mathf.Sqrt((velocityX * velocityX) + (velocityY * velocityY) + (velocityZ * velocityZ));
 
-        float rotationX = tf.rotation.eulerAngles.x;
-        float rotationY = tf.rotation.eulerAngles.y;
-        float rotationZ= tf.rotation.eulerAngles.z;
+        float rotationX = Mathf.Round(rb.angularVelocity.x);
+        float rotationY = Mathf.Round(rb.angularVelocity.y);
+        float rotationZ = Mathf.Round(rb.angularVelocity.z);
         rotation = Mathf.Sqrt((rotationX * rotationX) + (rotationY * rotationY) + (rotationZ * rotationZ));
 
         if (!engineSource.isPlaying)
@@ -54,7 +54,7 @@ public class Sounds : MonoBehaviour {
             engineSource.volume = velocity / 100;
 
         else
-            engineSource.volume = rotation / 100;
+            engineSource.volume = rotation / 110;
 
     }
 

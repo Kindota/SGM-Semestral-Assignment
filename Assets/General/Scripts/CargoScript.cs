@@ -29,8 +29,6 @@ public class CargoScript : MonoBehaviour {
         cargoUnloading.clip = cargoUnloadingClip;
         cargoError.clip = cargoErrorClip;
         cargoComplete.clip = cargoCompleteClip;
-
-        cargoLoading.Play();
     }
 	
 	// Update is called once per frame

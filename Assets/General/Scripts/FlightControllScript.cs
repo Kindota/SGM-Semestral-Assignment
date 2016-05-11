@@ -92,8 +92,16 @@ public class FlightControllScript : MonoBehaviour {
         } 
         else if (Input.GetKeyUp(KeyCode.Joystick1Button4) || Input.GetKeyUp(KeyCode.Joystick1Button5))
         {
-            rigidBody.drag = 0;
-            rigidBody.angularDrag = 0.05f;
+            if (dummyMode)
+            {
+                rigidBody.drag = 1f;
+                rigidBody.angularDrag = 1f;
+            }
+            else
+            {
+                rigidBody.drag = 0.05f;
+                rigidBody.angularDrag = 0.05f;
+            }
         }
     }
 
@@ -101,8 +109,8 @@ public class FlightControllScript : MonoBehaviour {
     {
         if (switchBoardData.b && !dummyMode)
         {
-            rigidBody.drag = 0.5f;
-            rigidBody.angularDrag = 0.5f;
+            rigidBody.drag = 1f;
+            rigidBody.angularDrag = 1f;
             dummyMode = true;
         } else if (!switchBoardData.b && dummyMode)
         {
@@ -138,8 +146,8 @@ public class FlightControllScript : MonoBehaviour {
         /*rigidBody.AddRelativeForce(Vector3.left * Time.deltaTime * strafe, ForceMode.Acceleration);
         rigidBody.AddRelativeForce(Vector3.forward * Time.deltaTime * forward, ForceMode.Acceleration);
         rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * vertical, ForceMode.Acceleration);*/
-        rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * arduinoData.arduinoAnalogY * 50, ForceMode.Acceleration);
-        rigidBody.AddRelativeForce(Vector3.left * Time.deltaTime * arduinoData.arduinoAnalogX * -50, ForceMode.Acceleration);
+        rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * arduinoData.arduinoAnalogY * 25, ForceMode.Acceleration);
+        rigidBody.AddRelativeForce(Vector3.left * Time.deltaTime * arduinoData.arduinoAnalogX * -25, ForceMode.Acceleration);
         if (arduinoData.arduinoButtonZ)
         {
             if (!buttonZLastValue)
@@ -148,7 +156,7 @@ public class FlightControllScript : MonoBehaviour {
                 buttonZLastValue = true;
             }
             float throttleValue = (arduinoData.arduinoPitch - zeroInValue);
-            rigidBody.AddRelativeForce(Vector3.forward * Time.deltaTime * throttleValue * 25, ForceMode.Acceleration);
+            rigidBody.AddRelativeForce(Vector3.forward * Time.deltaTime * throttleValue * 15, ForceMode.Acceleration);
             Debug.Log(arduinoData.arduinoPitch - zeroInValue);
         }
         else

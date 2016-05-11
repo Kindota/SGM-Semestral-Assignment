@@ -78,6 +78,7 @@ public class FlightControllScript : MonoBehaviour {
         {
             LinearMovement();
             RotationalMovement();
+            BoostCheck();
         }
         DummyButtonCheck();
         DummyModeCheck();
@@ -87,8 +88,8 @@ public class FlightControllScript : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Joystick1Button5))
         {
-            rigidBody.drag = 3;
-            rigidBody.angularDrag = 3;
+            rigidBody.drag = 2.5f;
+            rigidBody.angularDrag = 2.5f;
         } 
         else if (Input.GetKeyUp(KeyCode.Joystick1Button4) || Input.GetKeyUp(KeyCode.Joystick1Button5))
         {
@@ -120,6 +121,14 @@ public class FlightControllScript : MonoBehaviour {
         }
     }
 
+    private void BoostCheck()
+    {
+        if (switchBoardData.c && Input.GetKeyDown(KeyCode.Joystick1Button0))
+        {
+            rigidBody.AddRelativeForce(Vector3.forward * 200, ForceMode.Impulse);
+        }
+    }
+
     /// <summary>
     /// method that handles rotationof the player plane
     /// </summary>
@@ -146,8 +155,8 @@ public class FlightControllScript : MonoBehaviour {
         /*rigidBody.AddRelativeForce(Vector3.left * Time.deltaTime * strafe, ForceMode.Acceleration);
         rigidBody.AddRelativeForce(Vector3.forward * Time.deltaTime * forward, ForceMode.Acceleration);
         rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * vertical, ForceMode.Acceleration);*/
-        rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * arduinoData.arduinoAnalogY * 25, ForceMode.Acceleration);
-        rigidBody.AddRelativeForce(Vector3.left * Time.deltaTime * arduinoData.arduinoAnalogX * -25, ForceMode.Acceleration);
+        rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * arduinoData.arduinoAnalogY * 15, ForceMode.Acceleration);
+        rigidBody.AddRelativeForce(Vector3.left * Time.deltaTime * arduinoData.arduinoAnalogX * -15, ForceMode.Acceleration);
         if (arduinoData.arduinoButtonZ)
         {
             if (!buttonZLastValue)

@@ -23,49 +23,92 @@ struct ArduinoData
     }
 }
 
+struct SwitchBoardData
+{
+    public bool a;
+    public bool b;
+    public bool c;
+
+    public SwitchBoardData(bool a, bool b, bool c)
+    {
+        this.a = a;
+        this.b = b;
+        this.c = c;
+    }
+}
+
 public class FlightControllScript : MonoBehaviour {
 
+    private bool keepReading;
     #region Arduinoreader
     private Thread ioThread;
     private SerialPort arduino;
-    private bool keepReading;
     private ArduinoData arduinoData;
+    #endregion
+    #region Switchboard
+    private Thread switchBoardThread;
+    private SerialPort switchBoard;
+    private SwitchBoardData switchBoardData;
     #endregion
     private Rigidbody rigidBody;
     private bool buttonZLastValue;
     private float zeroInValue;
+    private bool dummyMode;
     // Use this for initialization
     void Start () {
+        dummyMode = false;
         buttonZLastValue = false;
         zeroInValue = 0;
         ioThread = new Thread(Poll);
+        switchBoardThread = new Thread(PollSwitchboard);
+        switchBoard = new SerialPort("\\\\.\\COM16", 9600);
         arduino = new SerialPort("COM3", 9600);
         arduino.DtrEnable = true;
         keepReading = true;
         arduinoData = new ArduinoData();
+        switchBoardData = new SwitchBoardData(false, false, false);
         rigidBody = gameObject.GetComponent<Rigidbody>();
         ioThread.Start();
+        switchBoardThread.Start();
     }
 	
 	// Update is called once per frame
 	void Update () {
-        LinearMovement();
-        RotationalMovement();
+        if (switchBoardData.a)
+        {
+            LinearMovement();
+            RotationalMovement();
+        }
         DummyButtonCheck();
-
+        DummyModeCheck();
     }
 
     private void DummyButtonCheck()
     {
         if (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Joystick1Button5))
         {
-            rigidBody.drag = 5;
-            rigidBody.angularDrag = 5;
+            rigidBody.drag = 3;
+            rigidBody.angularDrag = 3;
         } 
         else if (Input.GetKeyUp(KeyCode.Joystick1Button4) || Input.GetKeyUp(KeyCode.Joystick1Button5))
         {
             rigidBody.drag = 0;
             rigidBody.angularDrag = 0.05f;
+        }
+    }
+
+    private void DummyModeCheck()
+    {
+        if (switchBoardData.b && !dummyMode)
+        {
+            rigidBody.drag = 0.5f;
+            rigidBody.angularDrag = 0.5f;
+            dummyMode = true;
+        } else if (!switchBoardData.b && dummyMode)
+        {
+            rigidBody.drag = 0.05f;
+            rigidBody.angularDrag = 0.05f;
+            dummyMode = false;
         }
     }
 
@@ -145,6 +188,23 @@ public class FlightControllScript : MonoBehaviour {
         }
         arduino.Close();
         Debug.Log("Ending Poll Thread");
+    }
+
+    private void PollSwitchboard()
+    {
+        Debug.Log("Starting Switchboard");
+        switchBoard.Open();
+        switchBoard.ReadLine();
+        while (keepReading && switchBoard.IsOpen)
+        {
+            string input = switchBoard.ReadLine();
+            string[] segments = input.Split(' ');
+            switchBoardData.a = Convert.ToBoolean(Convert.ToInt32(segments[0]));
+            switchBoardData.b = Convert.ToBoolean(Convert.ToInt32(segments[1]));
+            switchBoardData.c = Convert.ToBoolean(Convert.ToInt32(segments[2]));
+        }
+        switchBoard.Close();
+        Debug.Log("Closing switchboard thread");
     }
     #endregion
 }

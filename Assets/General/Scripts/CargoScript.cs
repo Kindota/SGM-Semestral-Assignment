@@ -34,18 +34,18 @@ public class CargoScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         float distance = locationScript.distanceToTarget();
-        Debug.Log("Distance: " + distance);
+        //Debug.Log("Distance: " + distance);
         if (distance < 50 && !cargoComplete.isPlaying)
         {
             cargoTransfer();
         }
 
-        Debug.Log("Action timer: " + currentActionTimer);
+        //Debug.Log("Action timer: " + currentActionTimer);
         if (distance > 50 && currentActionTimer > 0f)
         {
             currentActionTimer = 0f;
             cargoError.Play();
-            Debug.Log("Aborted:");
+            //Debug.Log("Aborted:");
         }
     }
 

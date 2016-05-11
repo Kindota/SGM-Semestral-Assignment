@@ -29,10 +29,14 @@ public class RumbleVestScript : MonoBehaviour {
     void OnApplicationQuit()
     {
         SetVest(0);
+        rumbleVest.Close();
     }
 
     private void SetVest(int left, int right)
     {
-        rumbleVest.Write("S" + left + " " + right + "E");
+        if (rumbleVest.IsOpen)
+        {
+            rumbleVest.Write("S" + left + " " + right + "E");
+        }
     }
 }

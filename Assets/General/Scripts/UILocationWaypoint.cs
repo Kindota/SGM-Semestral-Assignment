@@ -57,11 +57,11 @@ public class UILocationWaypoint : MonoBehaviour
         catch (System.NullReferenceException) { }
     }
 
-    public float distanceToTarget()
+    public int distanceToTarget()
     {   
         if(target != null)
         {
-            return Vector3.Distance(target.position, spaceship.transform.position) / 1000;
+            return (int) Vector3.Distance(target.position, spaceship.transform.position);
         }
         else
         {

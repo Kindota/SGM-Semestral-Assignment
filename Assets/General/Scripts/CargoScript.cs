@@ -13,8 +13,8 @@ public class CargoScript : MonoBehaviour {
     AudioSource cargoError;
     AudioSource cargoComplete;
 
-    float cargLoadingTime = 15f;
-    float currentActionTimer = 0f;
+    float cargLoadingTime = 9f;
+    private float currentActionTimer = 0f;
 
     bool hasCargo = false;
     // Use this for initialization
@@ -33,19 +33,21 @@ public class CargoScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Debug.Log(locationScript.distanceToTarget());
-
-        if (locationScript.distanceToTarget() < 0.2f)
+        float distance = locationScript.distanceToTarget();
+        Debug.Log("Distance: " + distance);
+        if (distance < 50 && !cargoComplete.isPlaying)
         {
             cargoTransfer();
         }
 
-        if(locationScript.distanceToTarget() > 0.2f && currentActionTimer != 0)
+        Debug.Log("Action timer: " + currentActionTimer);
+        if (distance > 50 && currentActionTimer > 0f)
         {
-            currentActionTimer = 0;
+            currentActionTimer = 0f;
             cargoError.Play();
+            Debug.Log("Aborted:");
         }
-	}
+    }
 
     void cargoTransfer()
     {
@@ -61,12 +63,13 @@ public class CargoScript : MonoBehaviour {
             }
         }
 
+        currentActionTimer += Time.deltaTime;
+
         if (currentActionTimer >= cargLoadingTime)
         {
             hasCargo = !hasCargo;
             cargoComplete.Play();
+            currentActionTimer = 0;
         }
-
-        currentActionTimer += Time.deltaTime;
     }
 }

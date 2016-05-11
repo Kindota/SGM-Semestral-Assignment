@@ -32,10 +32,14 @@ public class FlightControllScript : MonoBehaviour {
     private ArduinoData arduinoData;
     #endregion
     private Rigidbody rigidBody;
+    private bool buttonZLastValue;
+    private float zeroInValue;
     // Use this for initialization
     void Start () {
+        buttonZLastValue = false;
+        zeroInValue = 0;
         ioThread = new Thread(Poll);
-        arduino = new SerialPort("COM4", 9600);
+        arduino = new SerialPort("COM3", 9600);
         arduino.DtrEnable = true;
         keepReading = true;
         arduinoData = new ArduinoData();
@@ -47,7 +51,23 @@ public class FlightControllScript : MonoBehaviour {
 	void Update () {
         LinearMovement();
         RotationalMovement();
-	}
+        DummyButtonCheck();
+
+    }
+
+    private void DummyButtonCheck()
+    {
+        if (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Joystick1Button5))
+        {
+            rigidBody.drag = 5;
+            rigidBody.angularDrag = 5;
+        } 
+        else if (Input.GetKeyUp(KeyCode.Joystick1Button4) || Input.GetKeyUp(KeyCode.Joystick1Button5))
+        {
+            rigidBody.drag = 0;
+            rigidBody.angularDrag = 0.05f;
+        }
+    }
 
     /// <summary>
     /// method that handles rotationof the player plane
@@ -58,9 +78,9 @@ public class FlightControllScript : MonoBehaviour {
         float roll = Input.GetAxis("Roll");
         float yaw = Input.GetAxis("Yaw");
         //Debug.Log("Pitch " + pitch + " roll " + roll + " yaw " + yaw);
-        rigidBody.AddRelativeTorque(Vector3.forward * Time.deltaTime * roll * 250, ForceMode.Acceleration);
-        rigidBody.AddRelativeTorque(Vector3.right * Time.deltaTime * pitch * 250, ForceMode.Acceleration);
-        rigidBody.AddRelativeTorque(Vector3.up * Time.deltaTime * yaw * 250, ForceMode.Acceleration);
+        rigidBody.AddRelativeTorque(Vector3.forward * Time.deltaTime * roll * 25, ForceMode.Acceleration);
+        rigidBody.AddRelativeTorque(Vector3.right * Time.deltaTime * pitch * 25, ForceMode.Acceleration);
+        rigidBody.AddRelativeTorque(Vector3.up * Time.deltaTime * yaw * 25, ForceMode.Acceleration);
     }
 
     /// <summary>
@@ -75,12 +95,22 @@ public class FlightControllScript : MonoBehaviour {
         /*rigidBody.AddRelativeForce(Vector3.left * Time.deltaTime * strafe, ForceMode.Acceleration);
         rigidBody.AddRelativeForce(Vector3.forward * Time.deltaTime * forward, ForceMode.Acceleration);
         rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * vertical, ForceMode.Acceleration);*/
-        Debug.Log("y " + arduinoData.arduinoAnalogY + " x " + arduinoData.arduinoAnalogX + " pitch " + arduinoData.arduinoPitch);
-        rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * arduinoData.arduinoAnalogY * 150, ForceMode.Acceleration);
-        rigidBody.AddRelativeForce(Vector3.left * Time.deltaTime * arduinoData.arduinoAnalogX * -150, ForceMode.Acceleration);
+        rigidBody.AddRelativeForce(Vector3.up * Time.deltaTime * arduinoData.arduinoAnalogY * 100, ForceMode.Acceleration);
+        rigidBody.AddRelativeForce(Vector3.left * Time.deltaTime * arduinoData.arduinoAnalogX * -100, ForceMode.Acceleration);
         if (arduinoData.arduinoButtonZ)
         {
-            rigidBody.AddRelativeForce(Vector3.forward * Time.deltaTime * arduinoData.arduinoPitch * 150, ForceMode.Acceleration);
+            if (!buttonZLastValue)
+            {
+                zeroInValue = arduinoData.arduinoPitch;
+                buttonZLastValue = true;
+            }
+            float throttleValue = (arduinoData.arduinoPitch - zeroInValue);
+            rigidBody.AddRelativeForce(Vector3.forward * Time.deltaTime * throttleValue * 50, ForceMode.Acceleration);
+            Debug.Log(arduinoData.arduinoPitch - zeroInValue);
+        }
+        else
+        {
+            buttonZLastValue = false;
         }
     }
 
